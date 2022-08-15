@@ -9,7 +9,7 @@ import kodlamaio.hrms.entities.concretes.JobPosition;
 @Repository
 public interface JobPositionDao extends JpaRepository<JobPosition, Integer> {
 	
-	@Query(value = "SELECT jobPosition FROM JobPosition jobPosition WHERE jobPosition.title = ?1")
-	JobPosition findByName(String title);
+	//@Query(value = "SELECT jobPosition FROM JobPosition jobPosition WHERE jobPosition.title = ?1")
+	JobPosition findByTitle(String title);
 
 }

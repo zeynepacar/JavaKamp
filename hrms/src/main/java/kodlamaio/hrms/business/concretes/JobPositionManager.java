@@ -43,7 +43,7 @@ public class JobPositionManager implements JobPositionService {
 
 	public Result isJobPositionExist(String jobTitle) {
 	
-		if(this.jobPositionDao.findByName(jobTitle) == null) {
+		if(this.jobPositionDao.findByTitle(jobTitle) == null) {
 			return new SuccessResult();
 		} else {
 			return new ErrorResult();

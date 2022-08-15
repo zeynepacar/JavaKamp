@@ -37,13 +37,13 @@ public class EmployerManager implements EmployerService{
 		return new SuccessDataResult<List<Employer>>(this.employerDao.findAll(), "Şirketler listelendi.");
 	}
 	
-	public Result checkInformationIsFull(Employer employer) {
+ /*	public Result checkInformationIsFull(Employer employer) {
 		if(employer.getCompanyName().isEmpty() || employer.getEmail().isEmpty() || employer.getPassword().isEmpty() || employer.getPhoneNumber().isEmpty() || employer.getWebAdress().isEmpty()) {
 			return new ErrorResult("Lütfen tüm alanları doldurunuz.");
 		} else {
 			return new SuccessResult("");
 		}
-	}
+	} */
 	
 	public Result isEmailUsed(String email) {
 		if(this.employerDao.findByEmail(email) == null) {
@@ -55,13 +55,11 @@ public class EmployerManager implements EmployerService{
 
 	@Override
 	public Result add(Employer employer) {
-		if(checkInformationIsFull(employer).isSuccess() && isEmailUsed(employer.getEmail()).isSuccess()) {
+		if(isEmailUsed(employer.getEmail()).isSuccess()) {
 			this.employerDao.save(employer);
-			System.out.println(this.emailVerificationService.verifyAccount(employer.getEmail()).getMessage());
-			System.out.println(this.hrmsVerificationService.verifyAccount().getMessage());
-			return new SuccessResult("İş veren başarıyla eklendi: " + employer.getCompanyName());
+			return new SuccessResult(this.emailVerificationService.verifyAccount(employer.getEmail()).getMessage() + this.hrmsVerificationService.verifyAccount().getMessage() + "İş veren başarıyla eklendi: " + employer.getCompanyName());
 		} else {
-			return new ErrorResult(checkInformationIsFull(employer).getMessage() + isEmailUsed(employer.getEmail()).getMessage());
+			return new ErrorResult(isEmailUsed(employer.getEmail()).getMessage());
 		}
 	}
 	

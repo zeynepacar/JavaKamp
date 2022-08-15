@@ -16,34 +16,41 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import kodlamaio.hrms.business.abstracts.EmployerService;
+import kodlamaio.hrms.business.abstracts.JobAdService;
 import kodlamaio.hrms.core.utilities.results.DataResult;
-import kodlamaio.hrms.entities.concretes.Employer;
 import kodlamaio.hrms.core.utilities.results.ErrorDataResult;
+import kodlamaio.hrms.entities.concretes.JobAd;
+import kodlamaio.hrms.entities.dtos.JobAdWithCompanyDto;
 
 @RestController
-@RequestMapping("/api/employers")
-public class EmployersController {
+@RequestMapping("/api/jobAds")
+public class JobAdsController {
 	
-	private EmployerService employerService;
+	private JobAdService jobAdService;
 
 	@Autowired
-	public EmployersController(EmployerService employerService) {
+	public JobAdsController(JobAdService jobAdService) {
 		super();
-		this.employerService = employerService;
+		this.jobAdService = jobAdService;
 	}
 	
-	@GetMapping("/getall")
-	public DataResult<List<Employer>> getAll(){
-		return this.employerService.getAll();
+	@GetMapping("/getActiveAds")
+	public 	DataResult<List<JobAd>> getActiveAds(){
+		return this.jobAdService.getActiveAds();
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<?> add(@Valid @RequestBody Employer employer) {
-		return ResponseEntity.ok(this.employerService.add(employer));
+	public ResponseEntity<?> add(@Valid @RequestBody JobAd jobAd) {
+		return ResponseEntity.ok(this.jobAdService.add(jobAd));
+	}
+	
+	@GetMapping("/getByCompanyNameAndIsActiveTrue")
+	public DataResult<List<JobAd>> getByCompanyNameAndIsActiveTrue(@RequestParam String companyName){
+		return this.jobAdService.getByCompanyNameAndIsActiveTrue(companyName);
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -57,6 +64,14 @@ public class EmployersController {
 		ErrorDataResult<Object> errors = new ErrorDataResult<Object>(validationErrors, "Doğrulama hataları");
 		return errors;
 	}
+	
+	@GetMapping("/getJobAdWithDetails")
+	public DataResult<List<JobAdWithCompanyDto>> getJobAdWithDetails(){
+		return this.jobAdService.getJobAdWithDetails();
+	}
+	
+	
+	
 	
 
 }

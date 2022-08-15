@@ -33,13 +33,13 @@ public class CandidateManager implements CandidateService {
 		this.emailVerificationService = emailVerificationService;
 	}
 
-	public Result checkInformationIsFull(Candidate candidate) {
+	/* public Result checkInformationIsFull(Candidate candidate) {
 		if(candidate.getBirthYear().isEmpty() || candidate.getEmail().isEmpty() || candidate.getFirstName().isEmpty() || candidate.getIdentityNumber().isEmpty() || candidate.getLastName().isEmpty() || candidate.getPassword().isEmpty() ) {
 			return new ErrorResult("Lütfen tüm alanları doldurunuz!");
 		} else {
 			return new SuccessResult("");
 		}
-	}
+	} */
 	
 	public Result isEmailUsed(String email) {
 		if(this.candidateDao.findByEmail(email) == null) {
@@ -74,12 +74,12 @@ public class CandidateManager implements CandidateService {
 
 	@Override
 	public Result add(Candidate candidate) throws NumberFormatException, RemoteException {
-		if(checkInformationIsFull(candidate).isSuccess() && isEmailUsed(candidate.getEmail()).isSuccess() && isIdentityNumberlUsed(candidate.getIdentityNumber()).isSuccess() && checkIfRealPerson(candidate).isSuccess()) {
+		if(isEmailUsed(candidate.getEmail()).isSuccess() && isIdentityNumberlUsed(candidate.getIdentityNumber()).isSuccess() && checkIfRealPerson(candidate).isSuccess()) {
 			this.candidateDao.save(candidate);
 			System.out.println(this.emailVerificationService.verifyAccount(candidate.getEmail()).getMessage());
 			return new SuccessResult("Aday eklendi." + candidate.getFirstName());
 		} else {
-			return new ErrorResult(checkInformationIsFull(candidate).getMessage() + isEmailUsed(candidate.getEmail()).getMessage() + isIdentityNumberlUsed(candidate.getIdentityNumber()).getMessage() + checkIfRealPerson(candidate).getMessage());
+			return new ErrorResult(isEmailUsed(candidate.getEmail()).getMessage() + isIdentityNumberlUsed(candidate.getIdentityNumber()).getMessage() + checkIfRealPerson(candidate).getMessage());
 		}
 		
 	}
